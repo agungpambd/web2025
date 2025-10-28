@@ -20,6 +20,9 @@ $routes->post('/karyawan/add', 'EmployeesController::empAdd');
 $routes->post('/karyawan/edit', 'EmployeesController::empEdit');
 $routes->post('/karyawan/delete', 'EmployeesController::empDelete');
 
-// Laporan dan ekspor
+// Print, Export, Import
 $routes->get('/karyawan/print', 'EmployeesController::empPrint');
 $routes->get('/karyawan/export', 'EmployeesController::empExport');
+$routes->add('/karyawan/import', 'EmployeesController::empImport');
+$routes->get('/karyawan/import/template', 'EmployeesController::empImportTemplate');
+$routes->post('/karyawan/import/process', 'EmployeesController::empImportProcess');

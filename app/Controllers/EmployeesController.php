@@ -316,4 +316,100 @@ class EmployeesController extends BaseController
         $writer->save('php://output');
         exit;
     }
+
+    public function empImport()
+    {
+        $data = [
+            'title'     => 'HRS | Import Data Karyawan',
+            'pageId'    => 'karyawan',
+            'pageSub'   => 'karyawan-import',
+            'dataEmp' => $this->emp->listEmployees()
+        ];
+
+        return view('/employees-import', $data);
+    }
+
+    public function empImportTemplate()
+    {
+        // Path ke file template di folder private (writable)
+        $filePath = WRITEPATH . 'berkas/Format-Import-Karyawan.xlsx';
+
+        // Cek apakah file ada
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File template tidak ditemukan!');
+        } else {
+            return $this->response->download($filePath, null);
+        }
+    }
+
+    public function empImportProcess()
+    {
+        // Ambil nama file dari input hidden
+        $file = $this->request->getPost('new_file');
+
+        // Cek apakah nama file yang dikirim dari form ada, jika tidak ada kembalikan error
+        if (!$file) {
+            return redirect()->back()->with('error', 'Nama file tidak ditemukan di request.');
+        }
+
+        // Path lengkap ke file di folder tmp
+        $tmpPath = WRITEPATH . 'berkas/tmp/' . $file;
+
+        // Cek apakah file yang sesuai ada di folder tmp, jika tidak ada kembalikan error
+        if (!file_exists($tmpPath)) {
+            return redirect()->back()->with('error', 'File Excel tidak ditemukan di folder sementara.');
+        }
+
+        // Baca file Excel menggunakan PhpSpreadsheet
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+
+        // Load file Excel dari folder tmp
+        $spreadsheet = $reader->load($tmpPath);
+
+        // Ambil data dari sheet bernama 'ImportData'
+        $sheet = $spreadsheet->getSheetByName('ImportData')->toArray();
+
+        // Validasi isi sheet, minimal ada lebih dari 1 baris (header + data)
+        if (empty($sheet) || count($sheet) <= 1) {
+            return redirect()->back()->with('error', 'File Excel kosong atau tidak memiliki data yang valid.');
+        }
+
+        $inserted = 0; // Hitung jumlah baris yang berhasil disimpan
+        foreach ($sheet as $x => $row) { // Looping per baris
+            if ($x == 0) continue; // lewati header
+            if (implode('', $row) === '') continue; // lewati baris kosong
+
+            // Siapkan data karyawan dari baris Excel
+            $data = [
+                'employee_id'    => $row[0],
+                'first_name'     => $row[1],
+                'last_name'      => $row[2],
+                'email'          => $row[3],
+                'phone_number'   => $row[4],
+                'hire_date'      => $row[5],
+                'job_id'         => $row[6],
+                'salary'         => $row[7],
+                'commission_pct' => $row[8],
+                'manager_id'     => $row[9],
+                'department_id'  => $row[10],
+            ];
+
+            // Simpan data karyawan ke database, jika gagal kembalikan error
+            if (!$this->emp->addEmployee($data)) {
+                return redirect()->back()->with('error', 'Gagal menyimpan data pada baris ke-' . ($x + 1));
+            }
+
+            // Tingkatkan counter jumlah baris yang berhasil disimpan
+            $inserted++;
+        }
+
+        // Hapus semua file di folder tmp setelah proses selesai
+        $tmpFiles = glob(dirname($tmpPath) . '/*');
+        foreach ($tmpFiles as $tmpFile) {
+            if (is_file($tmpFile)) unlink($tmpFile);
+        }
+
+        // Kembalikan ke halaman import dengan pesan sukses dan jumlah baris yang disimpan
+        return redirect()->to('/karyawan')->with('success', 'Data karyawan berhasil diimpor (' . $inserted . ' baris).');
+    }
 }

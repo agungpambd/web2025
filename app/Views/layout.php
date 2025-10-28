@@ -32,6 +32,8 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+    <link rel="stylesheet" href="<?= base_url('assets/extensions/filepond/filepond.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css'); ?>">
 </head>
 
 <body>
@@ -98,10 +100,10 @@
 
                             <ul class="submenu <?= ($pageId == 'karyawan') ? 'active submenu-open' : ''; ?>" style="--submenu-height: 43px;">
                                 <li class="submenu-item <?= ($pageSub == 'karyawan-data') ? 'active' : ''; ?> ">
-                                    <a href="karyawan" class="submenu-link">Kelola Data</a>
+                                    <a href="/karyawan" class="submenu-link">Kelola Data</a>
                                 </li>
                                 <li class="submenu-item <?= ($pageSub == 'karyawan-import') ? 'active' : ''; ?> ">
-                                    <a href="karyawan-import" class="submenu-link">Import Data</a>
+                                    <a href="/karyawan/import" class="submenu-link">Import Data</a>
                                 </li>
                             </ul>
                         </li>
@@ -109,11 +111,52 @@
                 </div>
             </div>
         </div>
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
+        <div id="main" class="layout-navbar navbar-fixed">
+            <header>
+                <nav class="navbar navbar-expand navbar-light navbar-top">
+                    <div class="container-fluid">
+                        <a href="#" class="burger-btn d-block">
+                            <i class="bi bi-justify fs-3"></i>
+                        </a>
+
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mb-lg-0">
+                            </ul>
+                            <div class="dropdown">
+                                <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="user-menu d-flex">
+                                        <div class="user-name text-end me-3">
+                                            <h6 class="mb-0 text-gray-600">John Ducky</h6>
+                                            <p class="mb-0 text-sm text-gray-600">Administrator</p>
+                                        </div>
+                                        <div class="user-img d-flex align-items-center">
+                                            <div class="avatar avatar-md">
+                                                <img src="./assets/compiled/jpg/1.jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style="min-width: 11rem;">
+                                    <li>
+                                        <h6 class="dropdown-header">Hello, John!</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My Profile</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>Settings</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="icon-mid bi bi-box-arrow-left me-2"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
             </header>
 
             <?= $this->renderSection('content') ?>

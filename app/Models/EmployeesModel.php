@@ -113,7 +113,8 @@ class EmployeesModel extends Model
 
     public function addEmployee($data)
     {
-        return $this->db->table('employees')->insert($data);
+        return $this->db->table('employees')
+            ->insert($data);
     }
 
     public function editEmployee($id, $data)
