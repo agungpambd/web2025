@@ -19,12 +19,12 @@ class EmployeesController extends BaseController
         $this->emp = new EmployeesModel();
     }
 
-
     public function employees()
     {
         $data = [
             'title'     => 'HRS | Data Karyawan',
             'pageId'    => 'karyawan',
+            'pageSub'   => 'karyawan-data',
             'listEmp'   => $this->emp->listEmployees(),
             'listDept'  => $this->emp->listDepartment(),
             'listJobs'  => $this->emp->listJobs(),
@@ -53,37 +53,50 @@ class EmployeesController extends BaseController
         $total     = $this->emp->countAllEmployees();
         $filtered  = $this->emp->countFilteredEmployees($search);
 
-        $data = []; // Menyimpan/inisiasi data untuk dikirim ke DataTables
-        $no = $start + 1;
+        $data = []; // Menyimpan data untuk dikirim ke DataTables
+        $no   = $start + 1;
 
         foreach ($employees as $emp) {
             $data[] = [
-                'no'                => $no++,
-                'employee_id'       => $emp->employee_id,
-                'nama'              => $emp->first_name . ' ' . $emp->last_name,
-                'department_name'   => $emp->department_name,
-                'hire_date'         => date("d-m-Y", strtotime($emp->hire_date)),
-                'job_title'         => $emp->job_title,
-                'salary'            => number_format($emp->salary),
-                'actions'           => '
-                <button class="btn btn-success btn-sm" data-id="' . $emp->employee_id . '" onclick="viewEmployee(' . $emp->employee_id . ')">
-                    <i class="bi bi-eye-fill"></i>
-                </button>
-                <button class="btn btn-warning btn-sm text-white" data-id="' . $emp->employee_id . '" onclick="editEmployee(' . $emp->employee_id . ')">
-                    <i class="bi bi-pencil-fill"></i>
-                </button>
-                <button class="btn btn-danger btn-sm" data-id="' . $emp->employee_id . '" onclick="deleteEmployee(' . $emp->employee_id . ')">
-                    <i class="bi bi-trash-fill"></i>
-                </button>'
+                'no'               => $no++,
+                'employee_id'      => $emp->employee_id,
+                'nama'             => $emp->first_name . ' ' . $emp->last_name,
+                'department_name'  => $emp->department_name,
+                'hire_date'        => date("d-m-Y", strtotime($emp->hire_date)),
+                'job_title'        => $emp->job_title,
+                'salary'           => number_format($emp->salary),
+                'actions'          => '
+                                        <button type="button"
+                                                class="btn btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalDetail' . $emp->employee_id . '"
+                                                title="Lihat Detail">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-warning text-white"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEdit' . $emp->employee_id . '"
+                                                title="Edit Data">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalDelete' . $emp->employee_id . '"
+                                                title="Hapus Data">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                        '
             ];
         }
 
         // Kirim response dalam format JSON sesuai kebutuhan DataTables
         return $this->response->setJSON([
-            'draw'              => intval($request->getPost('draw')), // untuk keamanan dari serangan XSS
-            'recordsTotal'      => $total, // total data tanpa filter
-            'recordsFiltered'   => $filtered, // total data dengan filter
-            'data'              => $data // data semua karyawan
+            'draw'            => intval($request->getPost('draw')), // untuk keamanan dari serangan XSS
+            'recordsTotal'    => $total, // total data tanpa filter
+            'recordsFiltered' => $filtered, // total data dengan filter
+            'data'            => $data // data semua karyawan
         ]);
     }
 
@@ -98,17 +111,17 @@ class EmployeesController extends BaseController
         }
 
         $data = [
-            'employee_id'       => $this->request->getPost('employee_id'),
-            'first_name'        => $this->request->getPost('first_name'),
-            'last_name'         => $this->request->getPost('last_name'),
-            'email'             => $this->request->getPost('email'),
-            'phone_number'      => $this->request->getPost('phone_number'),
-            'hire_date'         => $this->request->getPost('hire_date'),
-            'job_id'            => $this->request->getPost('job_id'),
-            'salary'            => $this->request->getPost('salary'),
-            'commission_pct'    => $commission,
-            'manager_id'        => $this->request->getPost('manager_id'),
-            'department_id'     => $this->request->getPost('department_id'),
+            'employee_id'     => $this->request->getPost('employee_id'),
+            'first_name'      => $this->request->getPost('first_name'),
+            'last_name'       => $this->request->getPost('last_name'),
+            'email'           => $this->request->getPost('email'),
+            'phone_number'    => $this->request->getPost('phone_number'),
+            'hire_date'       => $this->request->getPost('hire_date'),
+            'job_id'          => $this->request->getPost('job_id'),
+            'salary'          => $this->request->getPost('salary'),
+            'commission_pct'  => $commission,
+            'manager_id'      => $this->request->getPost('manager_id'),
+            'department_id'   => $this->request->getPost('department_id'),
         ];
 
         $this->emp->addEmployee($data);
@@ -127,16 +140,16 @@ class EmployeesController extends BaseController
         }
 
         $data = [
-            'first_name'        => $this->request->getPost('first_name'),
-            'last_name'         => $this->request->getPost('last_name'),
-            'email'             => $this->request->getPost('email'),
-            'phone_number'      => $this->request->getPost('phone_number'),
-            'hire_date'         => $this->request->getPost('hire_date'),
-            'job_id'            => $this->request->getPost('job_id'),
-            'salary'            => $this->request->getPost('salary'),
-            'commission_pct'    => $commission,
-            'manager_id'        => $this->request->getPost('manager_id'),
-            'department_id'     => $this->request->getPost('department_id'),
+            'first_name'      => $this->request->getPost('first_name'),
+            'last_name'       => $this->request->getPost('last_name'),
+            'email'           => $this->request->getPost('email'),
+            'phone_number'    => $this->request->getPost('phone_number'),
+            'hire_date'       => $this->request->getPost('hire_date'),
+            'job_id'          => $this->request->getPost('job_id'),
+            'salary'          => $this->request->getPost('salary'),
+            'commission_pct'  => $commission,
+            'manager_id'      => $this->request->getPost('manager_id'),
+            'department_id'   => $this->request->getPost('department_id'),
         ];
 
         $this->emp->editEmployee($employeeId, $data);

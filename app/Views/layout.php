@@ -89,11 +89,21 @@
                         </li>
 
                         <li class="sidebar-title">Manajemen Data</li>
-                        <li class="sidebar-item <?= ($pageId == 'karyawan') ? 'active' : ''; ?>">
-                            <a href="karyawan" class='sidebar-link'>
+
+                        <li class="sidebar-item <?= ($pageId == 'karyawan') ? 'active' : ''; ?> has-sub">
+                            <a href="#" class="sidebar-link">
                                 <i class="bi bi-people-fill"></i>
-                                <span>Data Karyawan</span>
+                                <span>Karyawan</span>
                             </a>
+
+                            <ul class="submenu <?= ($pageId == 'karyawan') ? 'active submenu-open' : ''; ?>" style="--submenu-height: 43px;">
+                                <li class="submenu-item <?= ($pageSub == 'karyawan-data') ? 'active' : ''; ?> ">
+                                    <a href="karyawan" class="submenu-link">Kelola Data</a>
+                                </li>
+                                <li class="submenu-item <?= ($pageSub == 'karyawan-import') ? 'active' : ''; ?> ">
+                                    <a href="karyawan-import" class="submenu-link">Import Data</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

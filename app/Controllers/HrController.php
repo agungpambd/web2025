@@ -17,13 +17,14 @@ class HrController extends BaseController
     public function index()
     {
         $data = [
-            'title'         => 'HRS | Dashboard',
-            'pageId'        => 'dashboard',
-            'totalEmp'      => $this->hr->totalEmployees(),
-            'totalSalary'   => $this->hr->totalSalary(),
-            'totalDept'     => $this->hr->totalDepartments(),
-            'totalJobs'     => $this->hr->totalJobs(),
-            'deptEmp'      => $this->hr->getEmployeesByDepartment(),
+            'title'       => 'HRS | Dashboard',
+            'pageId'      => 'dashboard',
+            'pageSub'     => 'dashboard-index',
+            'totalEmp'    => $this->hr->totalEmployees(),
+            'totalSalary' => $this->hr->totalSalary(),
+            'totalDept'   => $this->hr->totalDepartments(),
+            'totalJobs'   => $this->hr->totalJobs(),
+            'deptEmp'     => $this->hr->getEmployeesByDepartment(),
         ];
 
         return view('dashboard', $data);
