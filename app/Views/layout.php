@@ -136,7 +136,7 @@
                                         </div>
                                         <div class="user-img d-flex align-items-center">
                                             <div class="avatar avatar-md">
-                                                <img src="./assets/compiled/jpg/1.jpg">
+                                                <img src="<?= base_url('/assets/compiled/jpg/1.jpg'); ?>" alt="Avatar">
                                             </div>
                                         </div>
                                     </div>

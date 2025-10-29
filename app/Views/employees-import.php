@@ -29,17 +29,18 @@
                     <div class="card">
                         <div class="card-header">
                             <p>
-                                Disini Anda bisa melakukan import data Mahasiswa dengan menggunakan format yang disediakan,
-                                klik <strong class="text-primary">Download Template</strong> untuk mengunduh formatnya.
+                                Silakan impor data Karyawan menggunakan file Excel sesuai format yang telah disediakan.
+                                Klik <strong class="text-primary">Download Template</strong> untuk mengunduh format Excel tersebut.
                             </p>
                             <a href="/karyawan/import/template" class="btn icon icon-left btn-primary">
                                 <i class="bi bi-download"></i> Download Template
                             </a>
                             <hr>
                             <p>
-                                Setelah mengisi data pada file Excel, Anda bisa menguploadnya dibawah ini,
-                                kemudian klik <strong class="text-warning">Preview Data</strong> untuk mengecek ulang isi datanya.
-                                Ekstensi file Excel yang diizinkan adalah <strong class="text-danger">.xlsx</strong> !
+                                Setelah Anda mengisi data Karyawan pada file tersebut, unggah kembali file Excel-nya melalui form di bawah ini,
+                                lalu klik <strong class="text-warning">Preview Data</strong> untuk meninjau dan memastikan isi datanya sudah benar sebelum disimpan.
+                                <br>
+                                <b>Catatan</b>: Hanya file dengan ekstensi <strong class="text-danger">.xlsx</strong> yang dapat diunggah.
                             </p>
                             <form method="post" enctype="multipart/form-data" action="/karyawan/import">
                                 <div class="form-group">
@@ -48,7 +49,7 @@
 
                                 <div class="row">
                                     <div class="col">
-                                        <button type="submit" name="preview" class="btn icon icon-left btn-info text-white">
+                                        <button type="submit" name="preview" class="btn icon icon-left btn-warning text-white">
                                             <i class="bi bi-search"></i> Preview Data
                                         </button>
                                     </div>
@@ -93,123 +94,125 @@
                                         <form method="post" action="/karyawan/import/process">
                                             <!-- Kirim nama file ke proses import -->
                                             <input type="hidden" name="new_file" value="<?= $nama_file_baru; ?>">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            <h5 class="text-primary">Preview Data</h5>
+                                                        </div>
 
-                                            <div class="card shadow mb-4">
-                                                <div class="card-header py-3">
-                                                    <h5 class="m-0 font-weight-bold text-primary">Preview Data</h5>
-                                                </div>
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table" id="tablePreview" width="100%" cellspacing="0">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>No</th>
+                                                                            <th>ID</th>
+                                                                            <th>Nama Depan</th>
+                                                                            <th>Nama Belakang</th>
+                                                                            <th>Email</th>
+                                                                            <th>No. Telepon</th>
+                                                                            <th>Tanggal Masuk</th>
+                                                                            <th>Posisi</th>
+                                                                            <th>Gaji (USD)</th>
+                                                                            <th>Komisi</th>
+                                                                            <th>Manager ID</th>
+                                                                            <th>Departemen ID</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php
+                                                                        $no = 1;
+                                                                        $numrow = 1;
+                                                                        $kosong = 0;
 
-                                                <div class="card-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table" id="tablePreview" width="100%" cellspacing="0">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>No</th>
-                                                                    <th>ID</th>
-                                                                    <th>Nama Depan</th>
-                                                                    <th>Nama Belakang</th>
-                                                                    <th>Email</th>
-                                                                    <th>No. Telepon</th>
-                                                                    <th>Tanggal Masuk</th>
-                                                                    <th>Posisi</th>
-                                                                    <th>Gaji (USD)</th>
-                                                                    <th>Komisi</th>
-                                                                    <th>Manager ID</th>
-                                                                    <th>Departemen ID</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                $no = 1;
-                                                                $numrow = 1;
-                                                                $kosong = 0;
+                                                                        foreach ($sheet as $row) {
+                                                                            $employee_id    = trim($row['A']);
+                                                                            $first_name     = trim($row['B']);
+                                                                            $last_name      = trim($row['C']);
+                                                                            $email          = trim($row['D']);
+                                                                            $phone_number   = trim($row['E']);
+                                                                            $hire_date      = trim($row['F']);
+                                                                            $job_id         = trim($row['G']);
+                                                                            $salary         = trim($row['H']);
+                                                                            $commission_pct = trim($row['I']);
+                                                                            $manager_id     = trim($row['J']);
+                                                                            $department_id  = trim($row['K']);
 
-                                                                foreach ($sheet as $row) {
-                                                                    $employee_id    = trim($row['A']);
-                                                                    $first_name     = trim($row['B']);
-                                                                    $last_name      = trim($row['C']);
-                                                                    $email          = trim($row['D']);
-                                                                    $phone_number   = trim($row['E']);
-                                                                    $hire_date      = trim($row['F']);
-                                                                    $job_id         = trim($row['G']);
-                                                                    $salary         = trim($row['H']);
-                                                                    $commission_pct = trim($row['I']);
-                                                                    $manager_id     = trim($row['J']);
-                                                                    $department_id  = trim($row['K']);
+                                                                            // Lewat header & baris kosong
+                                                                            if ($numrow == 1 || ($employee_id == '' && $first_name == '' && $last_name == '' && $email == '' && $phone_number == '' && $hire_date == '' && $job_id == '' && $salary == '' && $commission_pct == '' && $manager_id == '' && $department_id == '')) {
+                                                                                $numrow++;
+                                                                                continue;
+                                                                            }
 
-                                                                    // Lewat header & baris kosong
-                                                                    if ($numrow == 1 || ($employee_id == '' && $first_name == '' && $last_name == '' && $email == '' && $phone_number == '' && $hire_date == '' && $job_id == '' && $salary == '' && $commission_pct == '' && $manager_id == '' && $department_id == '')) {
-                                                                        $numrow++;
-                                                                        continue;
-                                                                    }
+                                                                            // Warna merah jika kolom kosong
+                                                                            $style = fn($v) => empty($v) ? 'style="background:#fadbd8;"' : '';
 
-                                                                    // Warna merah jika kolom kosong
-                                                                    $style = fn($v) => empty($v) ? 'style="background:#fadbd8;"' : '';
+                                                                            if (
+                                                                                empty($employee_id) || empty($first_name) || empty($last_name) ||
+                                                                                empty($email) || empty($phone_number) || empty($hire_date) ||
+                                                                                empty($job_id) || empty($salary) || empty($commission_pct) ||
+                                                                                empty($manager_id) || empty($department_id)
+                                                                            ) {
+                                                                                $kosong++;
+                                                                            }
+                                                                        ?>
+                                                                            <tr>
+                                                                                <td class="text-center"><?= $no++; ?></td>
+                                                                                <td <?= $style($employee_id); ?>><?= esc($employee_id); ?></td>
+                                                                                <td <?= $style($first_name); ?>><?= esc($first_name); ?></td>
+                                                                                <td <?= $style($last_name); ?>><?= esc($last_name); ?></td>
+                                                                                <td <?= $style($email); ?>><?= esc($email); ?></td>
+                                                                                <td <?= $style($phone_number); ?>><?= esc($phone_number); ?></td>
+                                                                                <td <?= $style($hire_date); ?>><?= esc($hire_date); ?></td>
+                                                                                <td <?= $style($job_id); ?>><?= esc($job_id); ?></td>
+                                                                                <td <?= $style($salary); ?>><?= esc($salary); ?></td>
+                                                                                <td <?= $style($commission_pct); ?>><?= esc($commission_pct); ?></td>
+                                                                                <td <?= $style($manager_id); ?>><?= esc($manager_id); ?></td>
+                                                                                <td <?= $style($department_id); ?>><?= esc($department_id); ?></td>
+                                                                            </tr>
+                                                                        <?php
+                                                                            $numrow++;
+                                                                        }
+                                                                        ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
 
-                                                                    if (
-                                                                        empty($employee_id) || empty($first_name) || empty($last_name) ||
-                                                                        empty($email) || empty($phone_number) || empty($hire_date) ||
-                                                                        empty($job_id) || empty($salary) || empty($commission_pct) ||
-                                                                        empty($manager_id) || empty($department_id)
-                                                                    ) {
-                                                                        $kosong++;
-                                                                    }
-                                                                ?>
-                                                                    <tr>
-                                                                        <td class="text-center"><?= $no++; ?></td>
-                                                                        <td <?= $style($employee_id); ?>><?= esc($employee_id); ?></td>
-                                                                        <td <?= $style($first_name); ?>><?= esc($first_name); ?></td>
-                                                                        <td <?= $style($last_name); ?>><?= esc($last_name); ?></td>
-                                                                        <td <?= $style($email); ?>><?= esc($email); ?></td>
-                                                                        <td <?= $style($phone_number); ?>><?= esc($phone_number); ?></td>
-                                                                        <td <?= $style($hire_date); ?>><?= esc($hire_date); ?></td>
-                                                                        <td <?= $style($job_id); ?>><?= esc($job_id); ?></td>
-                                                                        <td <?= $style($salary); ?>><?= esc($salary); ?></td>
-                                                                        <td <?= $style($commission_pct); ?>><?= esc($commission_pct); ?></td>
-                                                                        <td <?= $style($manager_id); ?>><?= esc($manager_id); ?></td>
-                                                                        <td <?= $style($department_id); ?>><?= esc($department_id); ?></td>
-                                                                    </tr>
-                                                                <?php
-                                                                    $numrow++;
-                                                                }
-                                                                ?>
-                                                            </tbody>
-                                                        </table>
+                                                            <script>
+                                                                $(document).ready(function() {
+                                                                    $('#tablePreview').DataTable({
+                                                                        responsive: true,
+                                                                        pageLength: 10,
+                                                                        language: {
+                                                                            search: "Cari:",
+                                                                            lengthMenu: "Tampilkan _MENU_ data per halaman",
+                                                                            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                                                                            paginate: {
+                                                                                first: '<i class="bi bi-skip-backward-fill"></i>',
+                                                                                previous: '<i class="bi bi-caret-left-fill"></i>',
+                                                                                next: '<i class="bi bi-caret-right-fill"></i>',
+                                                                                last: '<i class="bi bi-skip-forward-fill"></i>'
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                });
+                                                            </script>
+
+
+                                                            <?php if ($kosong > 0): ?>
+                                                                <div class="alert alert-danger mt-3">
+                                                                    Ops! Ada <strong><?= $kosong; ?></strong> baris data yang tidak lengkap!
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <div class="mt-3">
+                                                                    <button type="submit" name="emp_import" class="btn icon icon-left btn-success">
+                                                                        <i class="bi bi-upload"></i> Import Data
+                                                                    </button>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     </div>
-
-                                                    <script>
-                                                        $(document).ready(function() {
-                                                            $('#tablePreview').DataTable({
-                                                                responsive: true,
-                                                                pageLength: 10,
-                                                                language: {
-                                                                    search: "Cari:",
-                                                                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                                                                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                                                                    paginate: {
-                                                                        first: '<i class="bi bi-skip-backward-fill"></i>',
-                                                                        previous: '<i class="bi bi-caret-left-fill"></i>',
-                                                                        next: '<i class="bi bi-caret-right-fill"></i>',
-                                                                        last: '<i class="bi bi-skip-forward-fill"></i>'
-                                                                    }
-                                                                }
-                                                            });
-                                                        });
-                                                    </script>
-
-
-                                                    <?php if ($kosong > 0): ?>
-                                                        <div class="alert alert-danger mt-3">
-                                                            Ops! Ada <strong><?= $kosong; ?></strong> baris data yang tidak lengkap!
-                                                        </div>
-                                                    <?php else: ?>
-                                                        <div class="mt-3">
-                                                            <button type="submit" name="emp_import" class="btn btn-success btn-icon-split shadow-sm">
-                                                                <span class="icon text-white-50"><i class="fas fa-upload"></i></span>
-                                                                <span class="text">Import Data</span>
-                                                            </button>
-                                                        </div>
-                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </form>
