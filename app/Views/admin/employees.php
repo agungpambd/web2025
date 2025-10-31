@@ -31,10 +31,10 @@
                             <button class="btn icon icon-left btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddEmployee">
                                 <i class="bi bi-plus-circle"></i> Tambah Data
                             </button>
-                            <a href="/karyawan/print" target="_blank" class="btn icon icon-left btn-info text-white">
+                            <a href="/admin/karyawan/print" target="_blank" class="btn icon icon-left btn-info text-white">
                                 <i class="bi bi-printer"></i> Print Data
                             </a>
-                            <a href="/karyawan/export" target="_blank" class="btn icon icon-left btn-success">
+                            <a href="/admin/karyawan/export" target="_blank" class="btn icon icon-left btn-success">
                                 <i class="bi bi-file-earmark-excel"></i> Export Data (Spreadsheet)
                             </a>
                         </div>
@@ -158,7 +158,7 @@
                                     <h5 class="modal-title text-white">Tambah Data Karyawan</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="/karyawan/add" method="post">
+                                <form action="/admin/karyawan/add" method="post">
                                     <div class="modal-body">
                                         <div class="row g-3">
                                             <div class="col-md-6">
@@ -306,7 +306,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
-                                    <form action="/karyawan/edit" method="post" enctype="multipart/form-data">
+                                    <form action="/admin/karyawan/edit" method="post" enctype="multipart/form-data">
                                         <div class="modal-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
@@ -402,7 +402,7 @@
                                         <h5 class="modal-title text-white">Hapus Karyawan Berikut [ID: <?= $employee->employee_id; ?>] ?</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <form action="/karyawan/delete" method="post">
+                                    <form action="/admin/karyawan/delete" method="post">
                                         <div class="modal-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">

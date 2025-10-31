@@ -393,13 +393,15 @@ class EmployeesController extends BaseController
                 'first_name'     => $row[1],
                 'last_name'      => $row[2],
                 'email'          => $row[3],
-                'phone_number'   => $row[4],
-                'hire_date'      => $row[5],
-                'job_id'         => $row[6],
-                'salary'         => $row[7],
-                'commission_pct' => $row[8],
-                'manager_id'     => $row[9],
-                'department_id'  => $row[10],
+                'password'       => password_hash($row[4], PASSWORD_DEFAULT),
+                'role'           => $row[5],
+                'phone_number'   => str_replace(',', '.', $row[6]),
+                'hire_date'      => $row[7],
+                'job_id'         => $row[8],
+                'salary'         => $row[9],
+                'commission_pct' => $row[10],
+                'manager_id'     => $row[11],
+                'department_id'  => $row[12],
             ];
 
             // Simpan data karyawan ke database, jika gagal kembalikan error

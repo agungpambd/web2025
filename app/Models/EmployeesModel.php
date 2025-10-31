@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-
 class EmployeesModel extends Model
 {
+    // Mendapatkan daftar semua karyawan dengan informasi terkait
     public function listEmployees()
     {
         return $this->db->table('employees e')
@@ -18,6 +18,8 @@ class EmployeesModel extends Model
             ->getResult();
     }
 
+    // Start of DataTables section
+    // Mendapatkan daftar karyawan untuk server-side DataTables dengan pagination, pencarian, dan sorting
     public function getEmployeesServerSide($search = null, $start = 0, $length = 10, $orderColumn = 'e.employee_id', $orderDir = 'asc')
     {
         $builder = $this->db->table('employees e')
@@ -62,11 +64,7 @@ class EmployeesModel extends Model
         return $builder->get()->getResult();
     }
 
-    public function countAllEmployees()
-    {
-        return $this->db->table('employees')->countAllResults();
-    }
-
+    // Menghitung total karyawan yang sesuai dengan filter pencarian untuk DataTables
     public function countFilteredEmployees($search = null)
     {
         // Membangun query dengan filter pencarian
@@ -87,8 +85,16 @@ class EmployeesModel extends Model
 
         return $builder->countAllResults();
     }
+    // End of DataTables section
 
 
+    // Menghitung total karyawan di database
+    public function countAllEmployees()
+    {
+        return $this->db->table('employees')->countAllResults();
+    }
+
+    // Mendapatkan daftar departemen
     public function listDepartment()
     {
         return $this->db->table('departments')
@@ -96,6 +102,7 @@ class EmployeesModel extends Model
             ->getResult();
     }
 
+    // Mendapatkan daftar jabatan
     public function listJobs()
     {
         return $this->db->table('jobs')
@@ -103,6 +110,7 @@ class EmployeesModel extends Model
             ->getResult();
     }
 
+    // Mendapatkan data employee_id terakhir (digunakan untuk proses penambahan karyawan agar otomatis +1 ID-nya)
     public function lastEmpId()
     {
         return $this->db->table('employees')
@@ -111,6 +119,8 @@ class EmployeesModel extends Model
             ->getRow();
     }
 
+
+    // Start of CRUD Operations
     public function addEmployee($data)
     {
         return $this->db->table('employees')
@@ -130,4 +140,26 @@ class EmployeesModel extends Model
             ->where('employee_id', $employeeId)
             ->delete();
     }
+    // End of CRUD Operations
+
+
+    // Start of import section using phpSpreadsheet (Excel)
+    // Mendapatkan daftar karyawan dengan kondisi gabungan employee_id dan email
+    public function getAllEmpKeys()
+    {
+        return $this->db->table('employees')
+            ->select('employee_id, email')
+            ->get()
+            ->getResultArray();
+    }
+
+    // Cek duplikat employee_id dan email di database, digunakan saat import
+    public function isDuplicatePair($employee_id, $email)
+    {
+        return $this->db->table('employees')
+            ->where('employee_id', $employee_id)
+            ->orWhere('email', $email)
+            ->countAllResults() > 0;
+    }
+    // End of import section
 }

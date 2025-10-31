@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'AuthController::login');
 $routes->post('auth/login-check', 'AuthController::loginCheck');
 $routes->get('logout', 'AuthController::logout');
+$routes->get('pass', 'AuthController::generatePasswordHash');
 
 // ADMIN PAGE
 $routes->group('admin', function ($routes) {

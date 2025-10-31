@@ -38,38 +38,45 @@ class AuthController extends BaseController
         $user = $this->request->getPost('username');
         $pass = $this->request->getPost('password');
 
-        //ambil data email di database yang sama dengan inputan user
+        // ambil data email di database yang sama dengan inputan user
         $check = $this->auth->getUser($user);
 
-        if ($check) { //cek apakah email ditemukan
-            if ($check->password != $pass) { //cek password, jika salah arahkan kembali ke halaman login
-                session()->setFlashdata('login_fail', 'Pasword salah!');
+        if ($check) { // cek apakah user ditemukan
+
+            // verifikasi password menggunakan password_verify()
+            if (!password_verify($pass, $check->password)) {
+                session()->setFlashdata('login_fail', 'Password salah!');
                 return redirect()->to('/');
             }
 
-            if (($check->password == $pass) && ($check->role == 0)) { // jika benar dan role = 0, arahkan user masuk ke halaman admin 
+            // (opsional) jika hash perlu diupdate ke versi terbaru
+            if (password_needs_rehash($check->password, PASSWORD_DEFAULT)) {
+                $newHash = password_hash($pass, PASSWORD_DEFAULT);
+                $this->auth->updatePassword($check->employee_id, $newHash);
+            }
 
+            // jika password benar dan role = 0 → admin
+            if ($check->role == 0) {
                 $this->session->set([
                     'userSession' => true,
-                    'userData'    => $check // simpan semua kolom admin sebagai satu objek
+                    'userData'    => $check
                 ]);
-
+                $this->session->regenerate();
                 return redirect()->to('/admin');
             }
 
-            if (($check->password == $pass) && ($check->role == 1)) { // jika benar dan role = 1, arahkan user masuk ke halaman user 
-
+            // jika password benar dan role = 1 → user
+            if ($check->role == 1) {
                 $this->session->set([
                     'userSession' => true,
-                    'userData'    => $check // simpan semua kolom user sebagai satu objek
+                    'userData'    => $check
                 ]);
-
+                $this->session->regenerate();
                 return redirect()->to('/user');
             }
         } else {
-            //jika username tidak ditemukan, balikkan ke halaman login
+            // jika username tidak ditemukan
             session()->setFlashdata('login_fail', 'Username tidak ditemukan!');
-
             return redirect()->to('/');
         }
     }
@@ -79,5 +86,10 @@ class AuthController extends BaseController
         //hapus session dan kembali ke halaman login
         $this->session->destroy();
         return redirect()->to('/');
+    }
+
+    public function generatePasswordHash()
+    {
+        return password_hash('user123', PASSWORD_DEFAULT);
     }
 }

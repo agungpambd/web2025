@@ -132,7 +132,7 @@
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
                                             <h6 class="mb-0 text-gray-600">
-                                                <!-- <= session()->get('userData')->first_name . ' ' . session()->get('userData')->last_name; ?> -->
+                                                <?= session()->get('userData')->first_name . ' ' . session()->get('userData')->last_name; ?>
                                             </h6>
                                             <p class="mb-0 text-sm text-gray-600">Administrator</p>
                                         </div>

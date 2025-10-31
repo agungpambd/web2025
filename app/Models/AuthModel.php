@@ -14,4 +14,9 @@ class AuthModel extends Model
             ->get()
             ->getRow();
     }
+
+    public function updatePassword($employee_id, $newHash)
+    {
+        return $this->update($employee_id, ['password' => $newHash]);
+    }
 }
