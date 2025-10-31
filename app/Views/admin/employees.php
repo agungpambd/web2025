@@ -1,4 +1,4 @@
-<?= $this->extend('layout') ?>
+<?= $this->extend('admin/layout') ?>
 
 <?= $this->section('content') ?>
 
@@ -62,7 +62,7 @@
                                             serverSide: true,
                                             responsive: true,
                                             ajax: {
-                                                url: "<?= site_url('karyawan/list'); ?>",
+                                                url: "<?= site_url('admin/karyawan/list'); ?>",
                                                 type: "POST"
                                             },
                                             columns: [{

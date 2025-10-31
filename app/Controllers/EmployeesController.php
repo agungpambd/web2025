@@ -16,6 +16,14 @@ class EmployeesController extends BaseController
 
     public function __construct()
     {
+        $session = session();
+
+        // Jika belum login atau bukan admin (role ≠ 0)
+        if (!$session->get('userSession') || (int)$session->get('role') !== 0) {
+            header('Location: ' . base_url('/?error=login_terlebih_dahulu'));
+            exit; // hentikan eksekusi agar method tidak berjalan
+        }
+
         $this->emp = new EmployeesModel();
     }
 
@@ -31,7 +39,7 @@ class EmployeesController extends BaseController
             'lastEmpId' => $this->emp->lastEmpId(),
         ];
 
-        return view('employees', $data);
+        return view('/admin/employees', $data);
     }
 
     public function getEmployeesAjax()
@@ -125,7 +133,7 @@ class EmployeesController extends BaseController
         ];
 
         $this->emp->addEmployee($data);
-        return redirect()->to('/karyawan')->with('success', 'Data karyawan berhasil ditambahkan.');
+        return redirect()->to('/admin/karyawan')->with('success', 'Data karyawan berhasil ditambahkan.');
     }
 
     public function empEdit()
@@ -154,7 +162,7 @@ class EmployeesController extends BaseController
 
         $this->emp->editEmployee($employeeId, $data);
 
-        return redirect()->to('/karyawan')->with('success', 'Data karyawan berhasil diperbarui.');
+        return redirect()->to('/admin/karyawan')->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
     public function empDelete()
@@ -163,7 +171,7 @@ class EmployeesController extends BaseController
 
         $this->emp->deleteEmployee($employeeId);
 
-        return redirect()->to('/karyawan')->with('success', 'Data karyawan berhasil dihapus.');
+        return redirect()->to('/admin/karyawan')->with('success', 'Data karyawan berhasil dihapus.');
     }
 
     public function empPrint()
@@ -172,7 +180,7 @@ class EmployeesController extends BaseController
             'dataEmp' => $this->emp->listEmployees()
         ];
 
-        return view('/employees-print', $data);
+        return view('/admin/employees-print', $data);
     }
 
     public function empExport()
@@ -326,7 +334,7 @@ class EmployeesController extends BaseController
             'dataEmp' => $this->emp->listEmployees()
         ];
 
-        return view('/employees-import', $data);
+        return view('/admin/employees-import', $data);
     }
 
     public function empImportTemplate()
@@ -410,6 +418,6 @@ class EmployeesController extends BaseController
         }
 
         // Kembalikan ke halaman import dengan pesan sukses dan jumlah baris yang disimpan
-        return redirect()->to('/karyawan')->with('success', 'Data karyawan berhasil diimpor (' . $inserted . ' baris).');
+        return redirect()->to('/admin/karyawan')->with('success', 'Data karyawan berhasil diimpor (' . $inserted . ' baris).');
     }
 }

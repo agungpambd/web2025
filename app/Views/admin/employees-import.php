@@ -1,4 +1,4 @@
-<?= $this->extend('layout') ?>
+<?= $this->extend('admin/layout') ?>
 
 <?= $this->section('content') ?>
 
@@ -32,7 +32,7 @@
                                 Silakan impor data Karyawan menggunakan file Excel sesuai format yang telah disediakan.
                                 Klik <strong class="text-primary">Download Template</strong> untuk mengunduh format Excel tersebut.
                             </p>
-                            <a href="/karyawan/import/template" class="btn icon icon-left btn-primary">
+                            <a href="/admin/karyawan/import/template" class="btn icon icon-left btn-primary">
                                 <i class="bi bi-download"></i> Download Template
                             </a>
                             <hr>
@@ -42,7 +42,7 @@
                                 <br>
                                 <b>Catatan</b>: Hanya file dengan ekstensi <strong class="text-danger">.xlsx</strong> yang dapat diunggah.
                             </p>
-                            <form method="post" enctype="multipart/form-data" action="/karyawan/import">
+                            <form method="post" enctype="multipart/form-data" action="/admin/karyawan/import">
                                 <div class="form-group">
                                     <input type="file" name="tmp_file" class="form-control" accept=".xlsx" onchange="ExcelFile(this);">
                                 </div>
@@ -91,7 +91,7 @@
                                         $spreadsheet = $reader->load($fullPath);
                                         $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
                                 ?>
-                                        <form method="post" action="/karyawan/import/process">
+                                        <form method="post" action="/admin/karyawan/import/process">
                                             <!-- Kirim nama file ke proses import -->
                                             <input type="hidden" name="new_file" value="<?= $nama_file_baru; ?>">
                                             <div class="col-12">

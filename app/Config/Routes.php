@@ -6,23 +6,35 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Halaman utama
-$routes->get('/', 'HrController::index');
+// Halaman Login
+$routes->get('/', 'AuthController::login');
+$routes->post('auth/login-check', 'AuthController::loginCheck');
+$routes->get('logout', 'AuthController::logout');
 
-// Halaman daftar karyawan (menampilkan view)
-$routes->get('/karyawan', 'EmployeesController::employees');
+// ADMIN PAGE
+$routes->group('admin', function ($routes) {
+    // Halaman utama
+    $routes->get('/', 'HrController::index');
+    $routes->get('dashboard', 'HrController::index');
 
-// Endpoint server-side DataTables (mengembalikan JSON)
-$routes->post('/karyawan/list', 'EmployeesController::getEmployeesAjax');
+    // Halaman daftar karyawan (menampilkan view)
+    $routes->get('karyawan', 'EmployeesController::employees');
 
-// CRUD routes
-$routes->post('/karyawan/add', 'EmployeesController::empAdd');
-$routes->post('/karyawan/edit', 'EmployeesController::empEdit');
-$routes->post('/karyawan/delete', 'EmployeesController::empDelete');
+    // Endpoint server-side DataTables (mengembalikan JSON)
+    $routes->post('karyawan/list', 'EmployeesController::getEmployeesAjax');
 
-// Print, Export, Import
-$routes->get('/karyawan/print', 'EmployeesController::empPrint');
-$routes->get('/karyawan/export', 'EmployeesController::empExport');
-$routes->add('/karyawan/import', 'EmployeesController::empImport');
-$routes->get('/karyawan/import/template', 'EmployeesController::empImportTemplate');
-$routes->post('/karyawan/import/process', 'EmployeesController::empImportProcess');
+    // CRUD routes
+    $routes->post('karyawan/add', 'EmployeesController::empAdd');
+    $routes->post('karyawan/edit', 'EmployeesController::empEdit');
+    $routes->post('karyawan/delete', 'EmployeesController::empDelete');
+
+    // Print, Export, Import
+    $routes->get('karyawan/print', 'EmployeesController::empPrint');
+    $routes->get('karyawan/export', 'EmployeesController::empExport');
+    $routes->add('karyawan/import', 'EmployeesController::empImport');
+    $routes->get('karyawan/import/template', 'EmployeesController::empImportTemplate');
+    $routes->post('karyawan/import/process', 'EmployeesController::empImportProcess');
+});
+
+
+// USER PAGE

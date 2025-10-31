@@ -100,10 +100,10 @@
 
                             <ul class="submenu <?= ($pageId == 'karyawan') ? 'active submenu-open' : ''; ?>" style="--submenu-height: 43px;">
                                 <li class="submenu-item <?= ($pageSub == 'karyawan-data') ? 'active' : ''; ?> ">
-                                    <a href="/karyawan" class="submenu-link">Kelola Data</a>
+                                    <a href="/admin/karyawan" class="submenu-link">Kelola Data</a>
                                 </li>
                                 <li class="submenu-item <?= ($pageSub == 'karyawan-import') ? 'active' : ''; ?> ">
-                                    <a href="/karyawan/import" class="submenu-link">Import Data</a>
+                                    <a href="/admin/karyawan/import" class="submenu-link">Import Data</a>
                                 </li>
                             </ul>
                         </li>
@@ -131,7 +131,9 @@
                                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
-                                            <h6 class="mb-0 text-gray-600">John Ducky</h6>
+                                            <h6 class="mb-0 text-gray-600">
+                                                <!-- <= session()->get('userData')->first_name . ' ' . session()->get('userData')->last_name; ?> -->
+                                            </h6>
                                             <p class="mb-0 text-sm text-gray-600">Administrator</p>
                                         </div>
                                         <div class="user-img d-flex align-items-center">
@@ -150,8 +152,7 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#"><i
-                                                class="icon-mid bi bi-box-arrow-left me-2"></i> Logout</a></li>
+                                    <li><a class="dropdown-item" href="/logout"><i class="icon-mid bi bi-box-arrow-left me-2"></i> Logout</a></li>
                                 </ul>
                             </div>
                         </div>
