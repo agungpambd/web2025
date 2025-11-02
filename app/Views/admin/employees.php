@@ -14,7 +14,7 @@
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">HRS</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Data Karyawan</li>
+                            <li class="breadcrumb-item active" aria-current="page">Kelola Karyawan</li>
                         </ol>
                     </nav>
                 </div>
@@ -162,16 +162,20 @@
                                     <div class="modal-body">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label>First Name<small class="text-danger">*</small></label>
+                                                <label>Nama Depan<small class="text-danger">*</small></label>
                                                 <input type="text" name="first_name" class="form-control" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Last Name<small class="text-danger">*</small></label>
+                                                <label>Nama Belakang<small class="text-danger">*</small></label>
                                                 <input type="text" name="last_name" class="form-control" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label>Username Email<small class="text-danger">*</small></label>
                                                 <input type="text" name="email" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Kata Sandi<small class="text-danger">*</small></label>
+                                                <input type="password" name="password" class="form-control" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label>No Telp<small class="text-danger">*</small></label>
@@ -190,7 +194,7 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label>Posisi<small class="text-danger">*</small></label>
                                                 <select name="job_id" class="form-select" required>
                                                     <option value="" selected disabled>Pilih Posisi</option>
@@ -212,13 +216,21 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label>Gaji ($)<small class="text-danger">*</small></label>
                                                 <input type="number" name="salary" class="form-control" required>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label>Komisi (0-100%)</label>
                                                 <input type="number" name="commission_pct" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Role</label>
+                                                <select name="role" class="form-select" required>
+                                                    <option value="" selected disabled>Pilih Role</option>
+                                                    <option value="1">User</option>
+                                                    <option value="0">Admin</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -276,13 +288,17 @@
                                                 <label><strong>Manajer</strong></label>
                                                 <p><?= $employee->manager_id . ' - ' . $employee->manager_name; ?></p>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label><strong>Gaji (USD)</strong></label>
                                                 <p><?= number_format($employee->salary); ?></p>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label><strong>Komisi</strong></label>
                                                 <p><?= $employee->commission_pct; ?> (<?= ($employee->commission_pct ? ($employee->commission_pct * 100) . '%' : '-'); ?>)</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label><strong>Role</strong></label>
+                                                <p><?= ($employee->role == 1) ? "User" : "Admin"; ?></p>
                                             </div>
                                         </div>
                                     </div>
@@ -320,6 +336,10 @@
                                                 <div class="col-md-6">
                                                     <label><strong>Username Email</strong><small class="text-danger">*</small></label>
                                                     <input type="text" name="email" value="<?= $employee->email; ?>" class="form-control" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label><strong>Kata Sandi</strong><small class="text-danger">*</small></label>
+                                                    <input type="password" name="email" class="form-control" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label><strong>No Telp</strong><small class="text-danger">*</small></label>
@@ -376,6 +396,17 @@
                                                 <div class="col-md-6">
                                                     <label><strong>Komisi (0-100%)</strong></label>
                                                     <input type="number" name="commission_pct" value="<?= $employee->commission_pct * 100; ?>" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label><strong>Role</strong><small class="text-danger">*</small></label>
+                                                    <select name="role" class="form-select" required>
+                                                        <option value="<?= $employee->role; ?>" selected>
+                                                            <?= ($employee->role == 0) ? "Admin" : "User"; ?>
+                                                        </option>
+                                                        <option value="" disabled>-- Pilih Role Baru --</option>
+                                                        <option value="1">User</option>
+                                                        <option value="0">Admin</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -437,13 +468,17 @@
                                                     <label><strong>Manajer</strong></label>
                                                     <p><?= $employee->manager_id . ' - ' . $employee->manager_name; ?></p>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <label><strong>Gaji</strong></label>
                                                     <p>$<?= number_format($employee->salary); ?></p>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <label><strong>Komisi</strong></label>
                                                     <p><?= $employee->commission_pct; ?> (<?= ($employee->commission_pct ? ($employee->commission_pct * 100) . '%' : '-'); ?>)</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label><strong>Role</strong></label>
+                                                    <p><?= ($employee->role == 1) ? "User" : "Admin"; ?></p>
                                                 </div>
                                             </div>
                                         </div>

@@ -21,21 +21,13 @@ date_default_timezone_set("Asia/Jakarta");
                         <th>Manager</th>
                         <th>Gaji (USD)</th>
                         <th>Komisi</th>
+                        <th>Role</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $no = 1;
                     foreach ($dataEmp as $row): ?>
-                        <?php
-                        /*
-                        $path = 'mhs-foto/' . $row['mhs_photo'];
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                        */
-                        ?>
-
                         <tr>
                             <td align="center"><?= $no; ?></td>
                             <td align="center"><?= $row->employee_id; ?></td>
@@ -48,6 +40,7 @@ date_default_timezone_set("Asia/Jakarta");
                             <td><?= $row->manager_name; ?></td>
                             <td align="right"><?= number_format($row->salary, 0, ',', '.'); ?></td>
                             <td align="right"><?= $row->commission_pct ? ($row->commission_pct * 100) . ' %' : '-'; ?></td>
+                            <td align="center"><?= ($row->role == 0) ? "Admin" : "User"; ?></td>
                         </tr>
                     <?php
                         $no++;
@@ -56,7 +49,7 @@ date_default_timezone_set("Asia/Jakarta");
                 </tbody>
             </table>
             <br>
-            <p>Dicetak pada: <?= (date("d-m-Y H:i:s")); ?> </p>
+            <p>Dicetak pada: <?= (date("d-m-Y H:i:s")); ?> WIB </p>
         </div>
     </div>
 </div>

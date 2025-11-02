@@ -6,18 +6,13 @@ use App\Models\HrModel;
 
 class HrController extends BaseController
 {
+    protected $requireAuth = true;
+    protected $allowedRoles = [0]; // Hanya admin (role 0)
+
     private $hr;
 
     public function __construct()
     {
-        $session = session();
-
-        // Jika belum login atau bukan admin (role ≠ 0)
-        if (!$session->get('userSession') || (int)$session->get('role') !== 0) {
-            header('Location: ' . base_url('/?login_terlebih_dahulu'));
-            exit; // penting: hentikan eksekusi agar method tidak lanjut
-        }
-
         $this->hr = new HrModel();
     }
 

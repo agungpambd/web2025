@@ -123,7 +123,7 @@
                                                                             <th>Nama Belakang</th>
                                                                             <th>Email</th>
                                                                             <th>Sandi</th>
-                                                                            <th>Hak Akses</th>
+                                                                            <th>Role</th>
                                                                             <th>No. Telepon</th>
                                                                             <th>Tanggal Masuk</th>
                                                                             <th>Posisi</th>

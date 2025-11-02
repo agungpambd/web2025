@@ -6,30 +6,32 @@ use App\Models\AuthModel;
 
 class AuthController extends BaseController
 {
-    protected $session;
+    protected $requireAuth = false; // Controller ini tidak membutuhkan login
+
     private $auth;
 
     public function __construct()
     {
-        $this->session = \Config\Services::session();
         $this->auth = new AuthModel();
     }
 
     public function login()
     {
-        if ($this->session->has('userSession')) {
-            if ($this->session->get('role') == 0) {
-                return redirect()->to('/admin');
+        // Jika sudah login, redirect ke dashboard
+        if ($this->isLoggedIn()) {
+            $user = $this->getCurrentUser();
+            $redirects = [0 => '/admin', 1 => '/user'];
+
+            if (isset($redirects[$user->role])) {
+                return redirect()->to($redirects[$user->role]);
             }
-            if ($this->session->get('role') == 1) {
-                return redirect()->to('/user');
-            }
-        } else {
-            $data = [
-                'title' => 'HRS | Login'
-            ];
-            return view('login', $data);
         }
+
+        $data = [
+            'title' => 'HRS | Login'
+        ];
+
+        return view('login', $data);
     }
 
     public function loginCheck()
@@ -61,6 +63,7 @@ class AuthController extends BaseController
                     'userSession' => true,
                     'userData'    => $check
                 ]);
+
                 $this->session->regenerate();
                 return redirect()->to('/admin');
             }
@@ -71,6 +74,7 @@ class AuthController extends BaseController
                     'userSession' => true,
                     'userData'    => $check
                 ]);
+
                 $this->session->regenerate();
                 return redirect()->to('/user');
             }

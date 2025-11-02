@@ -12,7 +12,7 @@ $routes->post('auth/login-check', 'AuthController::loginCheck');
 $routes->get('logout', 'AuthController::logout');
 $routes->get('pass', 'AuthController::generatePasswordHash');
 
-// ADMIN PAGE
+// ADMIN Routes
 $routes->group('admin', function ($routes) {
     // Halaman utama
     $routes->get('/', 'HrController::index');
@@ -38,4 +38,8 @@ $routes->group('admin', function ($routes) {
 });
 
 
-// USER PAGE
+// USER Routes
+$routes->group('user', function ($routes) {
+    // Halaman utama
+    $routes->get('/', 'UserController::index');
+});

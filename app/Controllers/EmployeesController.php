@@ -12,18 +12,13 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class EmployeesController extends BaseController
 {
+    protected $requireAuth = true; // Controller ini membutuhkan login
+    protected $allowedRoles = [0]; // Hanya admin (role 0)
+
     private $emp;
 
     public function __construct()
     {
-        $session = session();
-
-        // Jika belum login atau bukan admin (role ≠ 0)
-        if (!$session->get('userSession') || (int)$session->get('role') !== 0) {
-            header('Location: ' . base_url('/?error=login_terlebih_dahulu'));
-            exit; // hentikan eksekusi agar method tidak berjalan
-        }
-
         $this->emp = new EmployeesModel();
     }
 
@@ -123,6 +118,8 @@ class EmployeesController extends BaseController
             'first_name'      => $this->request->getPost('first_name'),
             'last_name'       => $this->request->getPost('last_name'),
             'email'           => $this->request->getPost('email'),
+            'password'        => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role'            => $this->request->getPost('role'),
             'phone_number'    => $this->request->getPost('phone_number'),
             'hire_date'       => $this->request->getPost('hire_date'),
             'job_id'          => $this->request->getPost('job_id'),
@@ -151,6 +148,8 @@ class EmployeesController extends BaseController
             'first_name'      => $this->request->getPost('first_name'),
             'last_name'       => $this->request->getPost('last_name'),
             'email'           => $this->request->getPost('email'),
+            'password'        => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role'            => $this->request->getPost('role'),
             'phone_number'    => $this->request->getPost('phone_number'),
             'hire_date'       => $this->request->getPost('hire_date'),
             'job_id'          => $this->request->getPost('job_id'),
@@ -196,7 +195,7 @@ class EmployeesController extends BaseController
 
         // === 3. Buat Header / Judul Laporan ===
         $sheet->setCellValue('A1', 'Data Karyawan PT. Koding Malam');
-        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A1:M1');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14); // Font bold & size 14
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
@@ -215,6 +214,7 @@ class EmployeesController extends BaseController
             'J3' => 'Manajer',
             'K3' => 'Gaji (USD)',
             'L3' => 'Komisi',
+            'M3' => 'Role',
             // Tambahkan header kolom lainnya sesuai kebutuhan
         ];
 
@@ -244,7 +244,7 @@ class EmployeesController extends BaseController
             ],
         ];
 
-        $sheet->getStyle('A3:L3')->applyFromArray($headerStyleArray);
+        $sheet->getStyle('A3:M3')->applyFromArray($headerStyleArray);
 
         // === 6. Menulis Data Karyawan ===
         $row = 4;
@@ -263,6 +263,7 @@ class EmployeesController extends BaseController
             $sheet->setCellValue('J' . $row, $data->manager_name);
             $sheet->setCellValue('K' . $row, $data->salary);
             $sheet->setCellValue('L' . $row, $data->commission_pct);
+            $sheet->setCellValue('M' . $row, ($data->role == 0) ? "Admin" : "User");
 
             $row++;
             $no++;
@@ -286,7 +287,7 @@ class EmployeesController extends BaseController
             ],
         ];
 
-        $sheet->getStyle('A3:L' . ($row - 1))->applyFromArray($tableStyleArray);
+        $sheet->getStyle('A3:M' . ($row - 1))->applyFromArray($tableStyleArray);
 
         // === 8. Style Khusus Kolom Gaji dan Komisi ===
         // Kolom K (Gaji) rata kanan & format ribuan
@@ -306,7 +307,7 @@ class EmployeesController extends BaseController
             ->setFormatCode('0.00'); // contoh: 0.25
 
         // === 9. Penyesuaian Lebar Kolom ===
-        foreach (range('A', 'L') as $col) {
+        foreach (range('A', 'M') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
