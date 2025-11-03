@@ -20,7 +20,10 @@ class AuthController extends BaseController
         // Jika sudah login, redirect ke dashboard
         if ($this->isLoggedIn()) {
             $user = $this->getCurrentUser();
-            $redirects = [0 => '/admin', 1 => '/user'];
+            $redirects = [
+                0 => '/admin',
+                1 => '/user'
+            ];
 
             if (isset($redirects[$user->role])) {
                 return redirect()->to($redirects[$user->role]);
@@ -94,6 +97,6 @@ class AuthController extends BaseController
 
     public function generatePasswordHash()
     {
-        return password_hash('user123', PASSWORD_DEFAULT);
+        return password_hash('F4j4R_sadboy', PASSWORD_DEFAULT);
     }
 }

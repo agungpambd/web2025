@@ -7,10 +7,10 @@ use CodeIgniter\Model;
 class AuthModel extends Model
 {
 
-    public function getUser($email)
+    public function getUser($user)
     {
         return $this->db->table('employees')
-            ->where('email', $email)
+            ->where('email', $user)
             ->get()
             ->getRow();
     }

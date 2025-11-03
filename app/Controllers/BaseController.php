@@ -44,8 +44,8 @@ abstract class BaseController extends Controller
     protected $session;
 
     // Properti untuk kontrol autentikasi di child controller
-    protected $requireAuth = false;  // Apakah perlu login utk akses controller ini?
-    protected $allowedRoles = [];    // Role mana saja yang boleh akses? (kosong = semua role boleh)
+    protected $requireAuth  = false;  // Apakah perlu login utk akses controller ini?
+    protected $allowedRoles = [];     // Role mana saja yang boleh akses? (kosong = semua role boleh)
 
     /**
      * @return void
@@ -83,7 +83,10 @@ abstract class BaseController extends Controller
             // Jika role user tidak ada di daftar allowedRoles
             if (!in_array($user->role, $this->allowedRoles)) {
                 // Redirect ke halaman sesuai role mereka
-                $redirects = [0 => '/admin', 1 => '/user'];
+                $redirects = [
+                    0 => '/admin',
+                    1 => '/user'
+                ];
 
                 if (isset($redirects[$user->role])) {
                     redirect()->to($redirects[$user->role])->send();
