@@ -12,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class EmployeesController extends BaseController
 {
-    protected $requireAuth = true; // Controller ini membutuhkan login
+    protected $requireAuth  = true; // Controller ini membutuhkan login
     protected $allowedRoles = [0]; // Hanya admin (role 0)
 
     private $emp;

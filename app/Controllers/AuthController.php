@@ -51,7 +51,7 @@ class AuthController extends BaseController
             // verifikasi password menggunakan password_verify()
             if (!password_verify($pass, $check->password)) {
                 session()->setFlashdata('login_fail', 'Password salah!');
-                return redirect()->to('/');
+                return redirect()->to('/?error=password_salah');
             }
 
             // (opsional) jika hash perlu diupdate ke versi terbaru
@@ -97,6 +97,6 @@ class AuthController extends BaseController
 
     public function generatePasswordHash()
     {
-        return password_hash('F4j4R_sadboy', PASSWORD_DEFAULT);
+        return password_hash('hik@r!', PASSWORD_DEFAULT);
     }
 }
